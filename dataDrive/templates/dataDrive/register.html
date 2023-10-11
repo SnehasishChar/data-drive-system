@@ -1,0 +1,88 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+{% block header %}
+    {% include 'dataDrive/common/header.html' %}
+{% endblock %}
+<body class="bg-dark">
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+                <a href="index.html">
+                    <img class="align-content" src="{% static 'dataDrive/images/logo.png' %}" alt="">
+                </a>
+            </div>
+            <div class="login-form">
+                <form onsubmit="return false">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>First Name</label>
+                        <input type="text" class="form-control" placeholder="First Name" id="firstName">
+                    </div>
+                    <div class="form-group">
+                        <label>Last Name</label>
+                        <input type="text" class="form-control" placeholder="Last Name" id="lastName">
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <input type="text" class="form-control" placeholder="Email" id="email">
+                    </div>
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" class="form-control" placeholder="User Name" id="username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" placeholder="Password" id="password">
+                    </div>
+                    <div class="form-group">
+                        <label>Confirm Password</label>
+                        <input type="password" class="form-control" placeholder="Confirm Password" id="confirmPassword">
+                    </div>
+                    <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30" onclick="registerUser()">
+                        Sign Up
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+     registerUser = () => {
+        let csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value
+        let firstName = document.getElementById('firstName').value;
+        let lastName = document.getElementById('lastName').value;
+        let username = document.getElementById('username').value;
+        let email = document.getElementById('email').value;
+        let password = document.getElementById('password').value;
+        let confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (password === confirmPassword ) {
+            let form_data = new FormData();
+            form_data.append('csrfmiddlewaretoken', csrf);
+            form_data.append('first_name', firstName);
+            form_data.append('last_name', lastName);
+            form_data.append('username', username);
+            form_data.append('email', email);
+            form_data.append('password', password);
+
+            let xhttp = new XMLHttpRequest();
+            xhttp.onreadystatechange = function () {
+                if (this.readyState === 4 && this.status === 200) {
+                    let response = this.responseText.split("::");
+                    if (response[0] === "Success" || response[0] === "Warning") {
+                        alert(response[1]);
+                        window.location.href = "{% url 'login' %}";
+                    } else alert(this.responseText);
+                }
+            };
+            xhttp.open("POST", "{% url 'register' %}", true);
+            xhttp.send(form_data);
+        } else
+            alert("Password and Confirm Password didn't match.")
+    }
+</script>
+</body>
+</html>

@@ -1,0 +1,346 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+{% block header %}
+    {% include 'dataDrive/common/header.html' %}
+{% endblock %}
+<body>
+<!-- Left Panel -->
+{% block side_bar %}
+    {% include 'dataDrive/common/side_bar.html' %}
+{% endblock %}
+<!-- End Left Panel -->
+<!-- Right Panel -->
+<div id="right-panel" class="right-panel">
+    <!-- Header-->
+    {% block top_header %}
+        {% include 'dataDrive/common/top_header.html' %}
+    {% endblock %}
+    <!-- End Header-->
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>Folder
+                        <button type="button" class="btn btn-link changeTitle"
+                                data-toggle="modal"
+                                data-target="#manageFolder" data-title="Add Folder">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="bootstrap-data-table-export"
+                                   class="table table-striped table-bordered table-responsive-md">
+                                <thead>
+                                <tr>
+                                    <th>Folder Name</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for a_folder in all_folders %}
+                                    <tr>
+                                        <td>{{ a_folder.name }}</td>
+                                        <td>
+                                            <button type="button" class="btn btn-link changeTitle2" data-toggle="modal"
+                                                    data-target="#manageFolder" data-title="Edit Folder"
+                                                    data-foldername="{{ a_folder.name }}"
+                                                    data-folderid="{{ a_folder.id }}">
+                                                <a href="{% url 'view_folder' _id=a_folder.id %}">
+                                                <i class="ti-eye"></i> (View)
+                                            </a>
+                                            </button>
+                                            <button type="button" class="btn btn-link changeTitle2" data-toggle="modal"
+                                                    data-target="#manageFolder" data-title="Edit Folder"
+                                                    data-foldername="{{ a_folder.name }}"
+                                                    data-folderid="{{ a_folder.id }}">
+                                                <i class="ti-pencil-alt"></i> (Edit)
+                                            </button>
+                                            <button type="button" class="btn btn-link addButton" data-toggle="modal"
+                                                    data-target="#deleteFolderModal" data-folderid="{{ a_folder.id }}">
+                                                <i class="ti-trash"></i> (Delete)
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- .animated -->
+    </div><!-- .content -->
+    <hr>
+    <div class="breadcrumbs">
+        <div class="col-sm-4">
+            <div class="page-header float-left">
+                <div class="page-title">
+                    <h1>File
+                        <button type="button" class="btn btn-link" data-toggle="modal" data-target="#manageFile">
+                            <i class="fa fa-plus"></i>
+                        </button>
+                    </h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content mt-3">
+        <div class="animated fadeIn">
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <table id="table"
+                                   class="table table-striped table-bordered table-responsive-md">
+                                <thead>
+                                <tr>
+                                    <th>File</th>
+                                    <th>Action</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {% for a_file in all_files %}
+                                    <tr>
+                                        <td><a href="{% get_media_prefix %}{{ a_file.file }}" target="_blank">
+                                                <i class="ti-eye"></i> {{ a_file.file }}
+                                            </a></td>
+                                        <td>
+                                            <button type="button" class="btn btn-link addButton2" data-toggle="modal"
+                                                    data-target="#deleteFileModal" data-fileid="{{ a_file.id }}">
+                                                <i class="ti-trash"></i> (Delete)
+                                            </button>
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div><!-- .animated -->
+    </div><!-- .content -->
+</div>
+<!-- End Right Panel -->
+<div class="modal fade" id="manageFolder">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Folder</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="return false">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Folder Name:</label>
+                        <input type="text" class="form-control" id="folderName" placeholder="Enter folder name">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" onclick="manageFolder()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteFolderModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Delete Folder</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>On deleting this folder it will delete all the data inside it. Are you sure want to delete?</p>
+
+                <form onsubmit="return false">
+                    {% csrf_token %}
+                </form>
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="deleteButton">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="manageFile">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Folder</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form onsubmit="return false">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label for="name">Folder Name:</label>
+                        <input type="file" class="form-control-file" id="selectedFile">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" onclick="manageFile()">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="deleteFileModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalTitle">Delete File</h5>
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p>On deleting this file it can not be restored. Are you sure want to delete?</p>
+                <form onsubmit="return false">
+                    {% csrf_token %}
+                </form>
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary" id="deleteButton2">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Footer -->
+{% block footer %}
+    {% include 'dataDrive/common/footer.html' %}
+{% endblock %}
+
+<script>
+    let folderAction = '';
+    let folderId = 0;
+    jQuery(document).ready(function () {
+        // Handle the click event on buttons to open the modal with different titles
+        jQuery(".changeTitle").click(function () {
+            let newTitle = jQuery(this).data('title');
+            jQuery("#modalTitle").text(newTitle);
+            folderAction = 'Add Folder';
+            jQuery("#manageFolder").modal('show');
+        });
+        jQuery(".changeTitle2").click(function () {
+            let newTitle = jQuery(this).data('title');
+            jQuery("#modalTitle").text(newTitle);
+            let folderName = jQuery(this).data('foldername');
+            jQuery("#folderName").val(folderName);
+            folderAction = 'Edit Folder';
+            folderId = jQuery(this).data('folderid');
+            jQuery("#manageFolder").modal('show');
+        });
+        jQuery(".addButton").click(function () {
+            folderId = jQuery(this).data('folderid');
+            jQuery("#deleteButton").attr("onclick","deleteFolder(folderId)");
+            folderAction = 'Delete Folder';
+            jQuery("#deleteFolderModal").modal('show');
+        });
+        jQuery(".addButton2").click(function () {
+            fileId = jQuery(this).data('fileid');
+            jQuery("#deleteButton2").attr("onclick","deleteFile(fileId)");
+            folderAction = 'Delete Folder';
+            jQuery("#deleteFolderModal").modal('show');
+        });
+    });
+    manageFolder = () => {
+        let csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        let folderName = document.getElementById('folderName').value;
+        let form_data = new FormData();
+        form_data.append('csrfmiddlewaretoken', csrf);
+        form_data.append('action', folderAction);
+        form_data.append('folder_id', folderId);
+        form_data.append('folder_name', folderName);
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let response = this.responseText.split("::");
+                if (response[0] === "Success" || response[0] === "Warning") {
+                    alert(response[1]);
+                    window.location.href = "{% url 'index' %}";
+                } else alert(this.responseText);
+            }
+        };
+        xhttp.open("POST", "{% url 'index' %}", true);
+        xhttp.send(form_data);
+    }
+    deleteFolder = (folderId) => {
+        let csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        let form_data = new FormData();
+        form_data.append('csrfmiddlewaretoken', csrf);
+        form_data.append('action', folderAction);
+        form_data.append('folder_id', folderId);
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let response = this.responseText.split("::");
+                if (response[0] === "Success" || response[0] === "Warning") {
+                    alert(response[1]);
+                    window.location.href = "{% url 'index' %}";
+                } else alert(this.responseText);
+            }
+        };
+        xhttp.open("POST", "{% url 'index' %}", true);
+        xhttp.send(form_data);
+    }
+    manageFile = () => {
+        let csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        let selectedFile = document.getElementById('selectedFile').files[0];
+        let form_data = new FormData();
+        form_data.append('csrfmiddlewaretoken', csrf);
+        form_data.append('action', 'Add File');
+        form_data.append('selected_file', selectedFile);
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let response = this.responseText.split("::");
+                if (response[0] === "Success" || response[0] === "Warning") {
+                    alert(response[1]);
+                    window.location.href = "{% url 'index' %}";
+                } else alert(this.responseText);
+            }
+        };
+        xhttp.open("POST", "{% url 'index' %}", true);
+        xhttp.send(form_data);
+    }
+    deleteFile = (fileId) => {
+        let csrf = document.getElementsByName('csrfmiddlewaretoken')[0].value;
+        let form_data = new FormData();
+        form_data.append('csrfmiddlewaretoken', csrf);
+        form_data.append('action', 'Delete File');
+        form_data.append('file_id', fileId);
+        let xhttp = new XMLHttpRequest();
+        xhttp.onreadystatechange = function () {
+            if (this.readyState === 4 && this.status === 200) {
+                let response = this.responseText.split("::");
+                if (response[0] === "Success" || response[0] === "Warning") {
+                    alert(response[1]);
+                    window.location.href = "{% url 'index' %}";
+                } else alert(this.responseText);
+            }
+        };
+        xhttp.open("POST", "{% url 'index' %}", true);
+        xhttp.send(form_data);
+    }
+</script>
+</div>
+<!-- End Footer -->
+</body>
+</html>

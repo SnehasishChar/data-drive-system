@@ -1,0 +1,26 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+{% block header %}
+    {% include 'dataDrive/common/header.html' %}
+{% endblock %}
+<body class="bg-dark">
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+                <a href="index.html">
+                    <img class="align-content" src="{% static 'dataDrive/images/logo.png' %}" alt="">
+                </a>
+            </div>
+            <div class="login-form">
+                <p class="text">You Have Successfully Logout. Please Click on Sign in to Login Again. </p>
+                <a href="{% url 'login' %}">
+                    <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30">Log in</button>
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

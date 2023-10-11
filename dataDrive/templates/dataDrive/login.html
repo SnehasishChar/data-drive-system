@@ -1,0 +1,40 @@
+{% load static %}
+<!doctype html>
+<html class="no-js" lang="en">
+{% block header %}
+    {% include 'dataDrive/common/header.html' %}
+{% endblock %}
+<body class="bg-dark">
+<div class="sufee-login d-flex align-content-center flex-wrap">
+    <div class="container">
+        <div class="login-content">
+            <div class="login-logo">
+                <a href="index.html">
+                    <img class="align-content" src="{% static 'dataDrive/images/logo.png' %}" alt="">
+                </a>
+            </div>
+            <div class="login-form">
+                <p class="text-center color-red">{{ error_message }}</p>
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <label>User Name</label>
+                        <input type="text" class="form-control" placeholder="User Name" name="username">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="password" class="form-control" placeholder="Password" name="password">
+                    </div>
+                    <button type="submit" class="btn btn-success btn-flat m-b-30 m-t-30">Sign in</button>
+                    <button type="button" class="btn btn-link"
+                                onclick="window.location.href='{% url 'register' %}'">
+                        Sign Up
+                    </button>
+
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
