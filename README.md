@@ -3,7 +3,7 @@
 ## FrontEnd - Bootstrap Template
 ## BackEnd -  Django Python, Sqlite
 
-###To run the project:
+### To run the project:
 
 Step 1: Create virtual environment.
 
