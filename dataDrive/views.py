@@ -11,6 +11,7 @@ from dataDrive.models import CustomUser, Folder, File
 
 
 def log_in(request):
+    """Allows user to login to the system if already registered."""
     if request.user.is_authenticated:
         return redirect('index')
     if request.method == "POST":
@@ -34,18 +35,16 @@ def log_in(request):
 
 
 def logout_user(request):
+    """Logout an already logged in user."""
     if not request.user.is_authenticated:
         return redirect('login')
 
     logout(request)
-    form = UserForm(request.POST or None)
-    context = {
-        "form": form,
-    }
-    return render(request, 'dataDrive/logout.html', context)
+    return render(request, 'dataDrive/logout.html')
 
 
 def register(request):
+    """Method for registering a new user."""
     if request.method == "POST":
         first_name = request.POST['first_name']
         last_name = request.POST['last_name']
@@ -70,6 +69,8 @@ def register(request):
 
 
 def index(request):
+    """It is the default page where the user will find it all base folder and files.
+    Here user can also manage its folder and files. Like add, update and delete."""
     if not request.user.is_authenticated:
         return redirect('login')
 
@@ -149,6 +150,8 @@ def index(request):
 
 
 def view_folder(request, _id):
+    """Here the user can view its data within a folder. User can also manage its folder and files.
+    Like add, update and delete."""
     if not request.user.is_authenticated:
         return redirect('login')
 
